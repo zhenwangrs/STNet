@@ -33,6 +33,6 @@ test.py
 slr_network_gcl.py
 slr_network_enc_dec_lstm.py
 /preprocess/
-/evaluation/
 slr_network_wlstm2.py
 slr_network.py
+/evaluation/
