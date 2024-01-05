@@ -1,0 +1,72 @@
+feeder: dataset.dataloader_video.BaseFeeder
+phase: train
+#phase: test
+#dataset: phoenix2014-T
+#work_dir: ./work_dir/phoenixt_sk3_mconv_lstm_paper/
+#dataset: phoenix2014
+#work_dir: ./work_dir/phoenix_sk3_mconv_lstm_rnnt_newdata_devtest/
+dataset: CSL-Daily
+work_dir: ./work_dir/csl_sk3_mconv_lstm/
+
+# dataset: phoenix14-si5
+num_epoch: 40
+batch_size: 2
+batch_accum: 1
+random_seed: 42
+test_batch_size: 2
+num_worker: 1
+device: 0
+log_interval: 100
+eval_interval: 1
+save_interval: 1
+# python in default
+#evaluate_tool: sclite
+evaluate_tool: python
+loss_weights:
+  SeqCTC: 1.0
+  ConvCTC: 1.0
+  Dist: 1.0
+  GNN: 0.0
+  SK: 0.0
+  Frame: 1.0
+  CSL: 0.0
+  Dec: 0.0
+#load_weights: 'F:\Research\CSL\CLGNN\CorrNet2\paper\epoch_1_batch_500.pth'
+#load_checkpoints: 'F:\Research\CSL\CLGNN\CorrNet2\work_dir\phoenix_sk3_mconv_lstm_rnnt\dev_44.13_epoch2_model.pt'
+
+optimizer_args:
+  optimizer: Adam
+  base_lr: 0.0001
+  step: [ 20, 35]
+  learning_ratio: 1
+  weight_decay: 0.0001
+  start_epoch: 1
+  nesterov: False
+
+feeder_args:
+  mode: 'train'
+  datatype: 'video'
+  num_gloss: -1
+  drop_ratio: 0.0
+  frame_interval: 1
+  image_scale: 1.0  # 0-1 represents ratio, >1 represents absolute value
+  input_size: 224
+
+model: slr_network_wlstm.SLRModel
+#model: slr_network_enc_dec_lstm.SLRModel
+decode_mode: beam
+model_args:
+  num_classes: 1296
+  c2d_type: resnet18 #resnet18, mobilenet_v2, squeezenet1_1, shufflenet_v2_x1_0, efficientnet_b1, mnasnet1_0, regnet_y_800mf, vgg16_bn, vgg11_bn, regnet_x_800mf, regnet_x_400mf, densenet121, regnet_y_1_6gf
+  conv_type: 2
+  use_bn: 1
+  # SMKD
+  share_classifier: True
+  weight_norm: True
+  hidden_size: 1024
+  # lstm
+  lstm_layers: 2
+  dropout: 0.0
+  # gnn
+  gcl_layers: 1
+  num_K: 4
